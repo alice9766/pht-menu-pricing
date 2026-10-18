@@ -1,0 +1,86 @@
+\section*{Notation and recurrence reference}
+The candidate products are $\mathcal Q=\{1,\ldots,Q\}$ with strictly increasing positive baseline values $\alpha_q$. A public product menu is $(S,\mathbf p)$, with $S\subseteq\mathcal Q$ and nonnegative uniform posted prices. Product $q$ has a nonnegative fixed activation cost $c_q$ and a per-subscription service cost $s_q$. Buyer type $k$ has population $n_k$, valuation coefficient $\theta_k>0$, and predetermined access limit $\bar q_k$. It chooses the highest-quality maximizer of $\theta_k\alpha_q-p_q$ over the accessible offered products and the outside option. A zero-utility subscription is preferred to the outside option. We set $\alpha_0=p_0=s_0=0$ for virtual product 0.
+
+The $B$ distinct positive access limits are $\widehat q_1<\cdots<\widehat q_B$. The map $\beta(u)$ is the first access group permitted to purchase product $u$, with $\beta(Q+1)=B+1$ and $\beta(0)=0$. The set $\mathcal I_b$ contains the buyer types in group $b$. If $B=0$, the joint optimum is the empty menu with value 0.
+\begin{equation}
+\beta(u)=\min\{b\in\{1,\ldots,B\}:u\le\widehat q_b\},
+\label{eq:s4_3}
+\tag{7}
+\end{equation}
+\setcounter{section}{4}
+\begin{definition}[Persistent hull tree and feasibility]\label{def:pht_feasibility}
+A persistent hull tree is an ordered tree rooted at virtual product 0, with each node's children ordered from left to right. Nonroot nodes correspond one-to-one to offered products, and each node is identified by its product index $u$. The edge from its parent to node $u$ is its incoming edge, labeled by the corresponding choice threshold $\tau_u$.
+
+Traverse the tree in preorder, visiting each node before its subtrees in their order. Let $\nu(u)$ be the first node encountered after the entire subtree rooted at $u$ has been visited, called the right boundary of that subtree. If no such node exists, set $\nu(u)=Q+1$. The set of access groups for which the incoming edge of node $u$ is active is
+\begin{equation}
+J_u=\{b\in\{1,\ldots,B\}:\beta(u)\le b<\beta(\nu(u))\}.
+\label{eq:s4_4}
+\tag{8}
+\end{equation} Thus, $J_u$ contains the access groups whose choice frontiers include this edge. A PHT is feasible if and only if all the following conditions hold.
+
+\begin{enumerate}
+\item Product indices of nonroot nodes strictly increase in preorder.
+\item All incoming edge thresholds are nonnegative.
+\item Edge thresholds are nondecreasing along every path from the root to a leaf.
+\item Thresholds on edges from the same parent to its children are nonincreasing from left to right.
+\item The set $J_u$ is nonempty for every nonroot node.
+\end{enumerate}
+\end{definition}
+The population above a choice threshold and the local edge contribution are
+\begin{equation}
+W_b(t)=\sum_{k\in\mathcal I_b}n_k\,\mathbf 1\{\theta_k\ge t\},
+\label{eq:s4_8}
+\tag{10}
+\end{equation}
+\begin{equation}
+\begin{aligned}
+g(a,u,v,t)={}&\bigl[t(\alpha_u-\alpha_a)-(s_u-s_a)\bigr]\\
+&\cdot\sum_{b=\beta(u)}^{\beta(v)-1}W_b(t)-c_u.
+\end{aligned}
+\label{eq:s4_9}
+\tag{11}
+\end{equation}
+Here $a$ is the parent of $u$, $v=\nu(u)$ is its subtree right boundary, and $t$ is its incoming edge threshold. The finite candidate set is
+\begin{equation}
+\mathcal T=\{0\}\cup\{\theta_k:1\le k\le K\}.
+\label{eq:s4_11}
+\tag{13}
+\end{equation}
+Write its sorted values as $0=t_0<t_1<\cdots<t_{T-1}$. A state $H(a,b,r)$ maximizes the sum of local contributions in a possibly empty subforest attached to external parent $a$. Its product nodes satisfy $u>a$ and $\beta(u)<b$. Direct child thresholds are at least $t_r$, and the tree feasibility conditions hold. The state excludes the parent's own incoming edge and fixed cost. We use $D_b(r)=\sum_{h=1}^{b-1}W_h(t_r)$ and $z_a(r)=t_r\alpha_a-s_a$. The edge contribution and both forms of the recurrence are
+\begin{equation}
+\bigl[z_u(r)-z_a(r)\bigr]
+\bigl[D_b(r)-D_{\beta(u)}(r)\bigr]-c_u.
+\label{eq:s5_3}
+\tag{14}
+\end{equation}
+\begin{equation}
+\begin{aligned}
+H(a,b,r)=\max\Bigl\{&H(a,b,r+1),\\
+&\max_{\substack{u\in\mathcal Q,\ u>a\\\beta(u)<b}}\bigl[H(a,\beta(u),r)+H(u,b,r)\\
+&\quad+\bigl(z_u(r)-z_a(r)\bigr)\\
+&\quad\cdot\bigl(D_b(r)-D_{\beta(u)}(r)\bigr)-c_u\bigr]\Bigr\}.
+\end{aligned}
+\label{eq:s5_4}
+\tag{15}
+\end{equation}
+\begin{equation}
+\begin{aligned}
+M_d(a;b,r)={}&\max_{\substack{u\in\mathcal Q,\ u>a\\\beta(u)=d}}\Bigl\{H(u,b,r)\\
+&+z_u(r)\bigl[D_b(r)-D_d(r)\bigr]-c_u\Bigr\},\quad d<b.
+\end{aligned}
+\label{eq:s5_5}
+\tag{16}
+\end{equation}
+\begin{equation}
+\begin{aligned}
+H(a,b,r)=\max\Bigl\{&H(a,b,r+1),\\
+&\max_{\max\{1,\beta(a)\}\le d<b}\bigl[H(a,d,r)\\
+&\quad-z_a(r)\bigl(D_b(r)-D_d(r)\bigr)\\
+&\quad+M_d(a;b,r)\bigr]\Bigr\}.
+\end{aligned}
+\label{eq:s5_6}
+\tag{17}
+\end{equation}
+The empty subforest has value 0. Set $H(a,b,T)=0$ and $H(a,b,r)=0$ when $\beta(a)\ge b$; a maximum over no candidates is $-\infty$. Evaluate decreasing $r$, increasing $b$, then decreasing $a$. After evaluating the current parent state, insert product $a$ into its group cache. Algorithm 1 in the paper uses this order.
+
+For product counts, $H_\ell(a,b,r)$ has exactly $\ell$ nodes, excluding $a$. Set $H_0=0$ and positive-count infeasible or terminal states to $-\infty$. Split $i+j+1=\ell$ when selecting last child $u$. For fixed-set pricing, $V_0$ denotes the optimum over subsets of $S_0$ with the fixed activation costs temporarily set to zero.

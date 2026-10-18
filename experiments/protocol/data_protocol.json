@@ -1,0 +1,265 @@
+{
+  "protocol_id": "uci321-delay-menu-v1",
+  "schema_version": "pht-experiment-v1",
+  "source": {
+    "name": "UCI ElectricityLoadDiagrams20112014",
+    "uci_id": 321,
+    "url": "https://archive.ics.uci.edu/static/public/321/electricityloaddiagrams20112014.zip",
+    "archive_sha256": "f6c4d0e0df12ecdb9ea008dd6eef3518adb52c559d04a9bac2e1b81dcfc8d4e1",
+    "archive_size_bytes": 261335609,
+    "archive_member": "LD2011_2014.txt",
+    "audit_csv_path": "data/source/window_quality_audit.csv",
+    "audit_csv_sha256": "31fa7f66ce3effa1839d714ae58699043ac71d6df252b212950b9d5eaa1d884b",
+    "finiteness_audit_path": "data/source/raw_finiteness_audit.json",
+    "audit_extractor_path": "data/source/audit_windows.py",
+    "audit_extractor_sha256": "0ae6d87d3ca291164e2444f4696b2ad38d90326d9cee17dcccab5d99286c41ae",
+    "expected_window_count": 2960,
+    "evaluation_months": [
+      "2011-02",
+      "2011-08",
+      "2012-02",
+      "2012-08",
+      "2013-02",
+      "2013-08",
+      "2014-02",
+      "2014-08"
+    ],
+    "reference_rule": "Immediately preceding calendar month",
+    "sampling_minutes": 15,
+    "timestamp_rule": "Source timestamps are interval endpoints; calendar assignment uses timestamp minus 15 minutes.",
+    "entities": "370 meter identifiers MT_001 through MT_370; entity is a data source, not buyer type or product quality.",
+    "finiteness_audit_sha256": "adbced92ce1b9ca6a7850e27769cf21f26ba341f262ae30e05c2f7d357c9948b"
+  },
+  "products": {
+    "delay_minutes_in_quality_order": [
+      240,
+      120,
+      60,
+      30,
+      15,
+      0
+    ],
+    "shared_within_month_warmup_minutes": 240,
+    "technical_score": "1 / (1 + mean_abs_error_delayed_vs_current / reference_month_mean_kw)",
+    "alpha_mapping": "alpha_q = 1 declared reference monetary unit * technical_score_q",
+    "alpha_decimal_places": 10,
+    "rounding": "decimal ROUND_HALF_EVEN applied to retained audit CSV numeric text",
+    "rational_interpretation": "The quantized decimal string is interpreted exactly; raw trace floating arithmetic is retained as provenance, not exact physical measurement.",
+    "quality_order": "Delay order is fixed in advance; do not sort by measured score, smooth, merge or add epsilon.",
+    "subscription_period": "one evaluation calendar month"
+  },
+  "eligibility": {
+    "pre_solver_rules": [
+      "Complete reference and evaluation calendar windows on the verified 15-minute grid",
+      "All reference/evaluation source values finite, verified in official archive",
+      "Reference mean strictly positive",
+      "Evaluation window not identically zero",
+      "Global first positive timestamp no later than end of reference month first day (first day + 1 day at 00:00); earlier activation remains valid even if first day has real zeros",
+      "All six quantized alpha values strictly positive and strictly increasing in prespecified delay order"
+    ],
+    "activation_rule_purpose": "Remove inactive pre-activation zero padding before estimating reference scale; this is a data-validity rule fixed before solving.",
+    "excluded_windows": "Retain all original 2960 rows, all reasons, and original technical scores; none are hidden or relabelled.",
+    "late_activation_reason": "late_activation_in_reference",
+    "no_result_selection": true
+  },
+  "selection": {
+    "hash_namespace": "uci321-menu-pilot-v1",
+    "hash_input": "namespace|archive_sha256|client|evaluation_month",
+    "hash_algorithm": "SHA256 of UTF-8 string",
+    "order": "within each evaluation month, eligible windows sorted by selection_hash then client",
+    "pilot_windows_per_month": 3,
+    "pilot_expected_windows": 24,
+    "all_mode": "All eligible windows using identical order and rules; no solver results consumed."
+  },
+  "buyers": {
+    "access_caps": [
+      2,
+      4,
+      6
+    ],
+    "theta_values": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "association_order": [
+      "positive",
+      "independent",
+      "negative"
+    ],
+    "counts_by_association": {
+      "positive": [
+        [
+          16,
+          12,
+          8,
+          4
+        ],
+        [
+          10,
+          10,
+          10,
+          10
+        ],
+        [
+          4,
+          8,
+          12,
+          16
+        ]
+      ],
+      "independent": [
+        [
+          10,
+          10,
+          10,
+          10
+        ],
+        [
+          10,
+          10,
+          10,
+          10
+        ],
+        [
+          10,
+          10,
+          10,
+          10
+        ]
+      ],
+      "negative": [
+        [
+          4,
+          8,
+          12,
+          16
+        ],
+        [
+          10,
+          10,
+          10,
+          10
+        ],
+        [
+          16,
+          12,
+          8,
+          4
+        ]
+      ]
+    },
+    "counts_semantics": "Integer buyer counts within a declared simulation market; each permission group has 40, each theta level 30, total 120.",
+    "input_origin": "Declared scenarios; not inferred from meter identifiers, electricity usage or posted prices."
+  },
+  "cost_profile_order": [
+    "balanced",
+    "activation_heavy",
+    "service_heavy"
+  ],
+  "cost_source": {
+    "repository": "https://github.com/alice9766/joint_catalog_pricing",
+    "release": "ICDE_Reproducibility_20261007",
+    "path": "trace/verify_trace.py::costs",
+    "file_sha256": "b8d94f3761794f318533ac7e93620f35efcf7d7309a580bfb71c5a06adf6a1d0",
+    "formula_index": "m = q-1 for q in 1..6",
+    "randomness": "random.Random(profile_seed); for each product draw independent uniform(.95,1.05) multipliers for activation then service cost",
+    "quantization": "Original round(value,9), decimal string, exact Fraction; expected vectors stored below.",
+    "origin": "Scenario costs copied from original trace protocol; not measured operating expenditure."
+  },
+  "cost_scenarios": {
+    "balanced": {
+      "seed": 2026092110,
+      "base_activation_formula": "1.5+0.5*(m+1)",
+      "base_service_formula": "0.05+0.035*m",
+      "activation_cost_exact": [
+        "101850839/50000000",
+        "2624599059/1000000000",
+        "759478981/250000000",
+        "1779753349/500000000",
+        "1927386977/500000000",
+        "4616844457/1000000000"
+      ],
+      "unit_service_cost_exact": [
+        "163119/3125000",
+        "43362963/500000000",
+        "6031191/50000000",
+        "15515663/100000000",
+        "48320737/250000000",
+        "231766413/1000000000"
+      ]
+    },
+    "activation_heavy": {
+      "seed": 2026092100,
+      "base_activation_formula": "4.0+1.2*(m+1)**1.25",
+      "base_service_formula": "0.02+0.008*m",
+      "activation_cost_exact": [
+        "5226212311/1000000000",
+        "28073279/3906250",
+        "9013644073/1000000000",
+        "5327624237/500000000",
+        "542597301/40000000",
+        "8013472007/500000000"
+      ],
+      "unit_service_cost_exact": [
+        "20766517/1000000000",
+        "6756771/250000000",
+        "1110163/31250000",
+        "22845467/500000000",
+        "25953271/500000000",
+        "58262817/1000000000"
+      ]
+    },
+    "service_heavy": {
+      "seed": 2026092120,
+      "base_activation_formula": "0.2+0.1*m",
+      "base_service_formula": "0.10+0.075*m",
+      "activation_cost_exact": [
+        "49130531/250000000",
+        "78495829/250000000",
+        "414379237/1000000000",
+        "30322761/62500000",
+        "38867137/62500000",
+        "713179389/1000000000"
+      ],
+      "unit_service_cost_exact": [
+        "48419881/500000000",
+        "21769689/125000000",
+        "248636633/1000000000",
+        "319806239/1000000000",
+        "102268539/250000000",
+        "471445039/1000000000"
+      ]
+    }
+  },
+  "parameter_sources": {
+    "alpha_q": {
+      "source": "UCI raw trace through declared normalized MAE score and 10-place quantization",
+      "calibration": "Reference monetary scale fixed to one; no observed willingness-to-pay claim"
+    },
+    "c_q": {
+      "source": "Original paper reproducibility release seeded cost scenario",
+      "calibration": "scenario_input"
+    },
+    "s_q": {
+      "source": "Original paper reproducibility release seeded cost scenario",
+      "calibration": "scenario_input"
+    },
+    "bar_q_k": {
+      "source": "Prespecified nested permission caps 2,4,6",
+      "calibration": "scenario_input"
+    },
+    "theta_k": {
+      "source": "Prespecified positive values 1,2,3,4",
+      "calibration": "scenario_input"
+    },
+    "n_k": {
+      "source": "Prespecified integer contingency matrices with fixed marginals",
+      "calibration": "scenario_input"
+    }
+  },
+  "market_catalog_role": "DaDaDa candidate product families motivate version design only; directory prices do not calibrate theta, n, permissions, or costs in protocol v1.",
+  "independence_note": "Windows may share a source meter and adjacent reference periods; scenario combinations are paired instances, not independent observed markets.",
+  "execution_scope": "Construct inputs and audit ledgers only; run no solver and infer no empirical performance claim."
+}

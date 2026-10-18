@@ -1,0 +1,340 @@
+{
+  "protocol_id": "sec6-final-prespecified-v2",
+  "protocol_status": "frozen_before_final_solver_execution",
+  "protocol_date": "2026-10-18 Asia/Shanghai",
+  "schema_version": "pht-experiment-v1",
+  "base_data_protocol": "protocol/data_protocol.json",
+  "source_snapshots": [
+    {
+      "path": "protocol/data_protocol.json",
+      "sha256": "2fae45103ebcb1a7912257139c67b6283792e2b7777f18fdfa8d96bfb7d1bbb9"
+    },
+    {
+      "path": "data/all/instances.jsonl",
+      "sha256": "3a406c99080b8eed6bf45c35c51a0249888fe8f43044d5eaad2bcdfd0410863a"
+    },
+    {
+      "path": "data/all/window_eligibility.csv",
+      "sha256": "1fb550ac8c08578bf520d47f7b22e047feea61f2dd58896e94763551938f5c1d"
+    },
+    {
+      "path": "data/pilot/instances.jsonl",
+      "sha256": "5aec34e5304df933a0293ea9cbf1348ed317054913b00146523234b383b9be37"
+    },
+    {
+      "path": "data/pilot/selection_manifest.json",
+      "sha256": "016fd10114585c0f02d7fd7ad42bac6948fd7f37d6812f70adc51afe45c33217"
+    },
+    {
+      "path": "data/source/window_quality_audit.csv",
+      "sha256": "31fa7f66ce3effa1839d714ae58699043ac71d6df252b212950b9d5eaa1d884b"
+    },
+    {
+      "path": "data/source/legacy_cost_reference.json",
+      "sha256": "6035f88f4e3bf22fa1f70092a73542b6c411ea1cc379a1929507ba5bee1011a1"
+    },
+    {
+      "path": "src/build_formal.py",
+      "sha256": "abc1ea1abcfbe093221c9aa363f149993b4a019b8cf892a01ded07e503bec3d3"
+    },
+    {
+      "path": "src/build_final.py",
+      "sha256": "4a3c77bfc7af89c6d43f657fb50df15864df08154f00feb5837751c06fa39890"
+    },
+    {
+      "path": "protocol/formal_protocol.json",
+      "sha256": "128d9a4cd6242be96f11b07b4ae6990de5f87b07b0d1e874be903f63d581d120"
+    }
+  ],
+  "purpose": "Complete the final predetermined enhancement batch using unchanged source construction and solver-outcome-independent sample extension.",
+  "real_full": {
+    "input_path": "data/all/instances.jsonl",
+    "windows": 2248,
+    "distinct_meters": 362,
+    "scenarios_per_window": 9,
+    "instances": 20232,
+    "methods": [
+      "joint"
+    ],
+    "repetitions": 1,
+    "timing_mode": "bulk_validation",
+    "base_data_protocol_unchanged": true,
+    "execution": "Rerun all 20232 original inputs under the final implementation; retain old results as history only."
+  },
+  "comparison": {
+    "input_path": "data/final/comparison_instances.jsonl",
+    "selection_rule": "Retain all original 24 meter-month windows; in chronological month order add nine distinct previously unselected meters per month by original selection_hash rank.",
+    "windows": 96,
+    "distinct_meters": 96,
+    "instances": 864,
+    "methods": [
+      "joint",
+      "G0",
+      "G1",
+      "G2",
+      "MILP"
+    ],
+    "repetitions": 3,
+    "timing_mode": "isolated_benchmark",
+    "joint_run_separate_from_bulk": true,
+    "baseline_common_input": true,
+    "selection": {
+      "evaluation_months": [
+        "2011-02",
+        "2011-08",
+        "2012-02",
+        "2012-08",
+        "2013-02",
+        "2013-08",
+        "2014-02",
+        "2014-08"
+      ],
+      "windows_per_month": 12,
+      "retained_per_month": 3,
+      "added_per_month": 9,
+      "ranking": "Original pre-solver selection_hash ascending, then meter ID ascending",
+      "uniqueness": "Reserve all 24 original meters first; newly selected meters cannot be selected in another month. Process months chronologically.",
+      "stratification": "Evaluation month",
+      "selection_outcome_blind": true
+    }
+  },
+  "capacity": {
+    "input_path": "data/final/comparison_instances.jsonl",
+    "instances": 864,
+    "maximum_capacity": 6,
+    "method": "capacity",
+    "repetitions": 1,
+    "timing_mode": "isolated_benchmark",
+    "report_all_capacity_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ]
+  },
+  "mapping_sensitivity": {
+    "windows": "same 96 fixed comparison windows",
+    "scenarios": "all nine original association-cost pairs per window",
+    "gamma_values": [
+      "0.5",
+      "1",
+      "2"
+    ],
+    "additional_gamma_values": [
+      "0.5",
+      "2"
+    ],
+    "additional_instances": 1728,
+    "base_gamma_one": "Reuse the three-repetition comparison joint result for the identical original input; verify equal exact optima.",
+    "source_column": "data/source/window_quality_audit.csv::nmae_delay_d",
+    "formula": "alpha_q = (1/(1+nmae_q))**gamma",
+    "arithmetic": "Decimal precision 50; gamma=.5 via sqrt; gamma=2 via multiplication; final quantize to 10 decimal places ROUND_HALF_EVEN",
+    "gamma_one_validation": "All 576 window-product values must equal original source quantized values.",
+    "quality_order_check": "Check all 288 window-gamma vectors before execution; retain audit and stop on failed strict order without reselection.",
+    "costs_and_buyers": "Identical to paired original base instance; no change to costs, counts, theta or permissions.",
+    "methods": [
+      "joint"
+    ],
+    "repetitions": 1,
+    "timing_mode": "bulk_validation",
+    "cross_mapping_evaluation": {
+      "source_gammas": [
+        "0.5",
+        "1",
+        "2"
+      ],
+      "target_gammas": [
+        "0.5",
+        "1",
+        "2"
+      ],
+      "menus_per_base": 3,
+      "evaluations_per_base": 9,
+      "expected_evaluations": 7776,
+      "rule": "Evaluate each source-optimal menu with unchanged product IDs/prices under each target instance via canonical utility selection; compare to target exact optimum. Do not reprice transferred menus. Record both signed realized profit and nonnegative regret; relative regret only if target optimum is positive."
+    }
+  },
+  "scaling": {
+    "base_dimensions": {
+      "Q": 32,
+      "B": 4,
+      "T": 9
+    },
+    "axis_values": {
+      "Q": [
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "B": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      "T": [
+        3,
+        5,
+        9,
+        17,
+        33
+      ]
+    },
+    "coordinate_deduplication": "The common center (32,4,9) is generated once per seed and cost profile and reused in all three axis plots.",
+    "seeds": [
+      2026101801,
+      2026101802,
+      2026101803,
+      2026101804,
+      2026101805,
+      2026101806,
+      2026101807,
+      2026101808,
+      2026101809,
+      2026101810
+    ],
+    "cost_profiles": [
+      "balanced",
+      "activation_heavy",
+      "service_heavy"
+    ],
+    "population": 512,
+    "timing_repetitions": 3,
+    "all_methods_q_max": 32,
+    "large_q_methods": [
+      "joint",
+      "G0",
+      "G1",
+      "G2"
+    ],
+    "timing_mode": "isolated_benchmark",
+    "quality_generator": "Draw Q independent integer increments uniformly from 1..9 using random.Random(seed); cumulative sums divided by total; alpha_Q=1.",
+    "buyer_generator": "B permission caps ceil(j*Q/B), j=1..B; T-1 equally spaced positive theta values from 1 to 4; all B*(T-1) combinations; count=512/(B*(T-1)), required integer.",
+    "association": "independent, exact uniform permission and theta marginals",
+    "cost_rng": "Seed is big-endian integer from first eight SHA256 bytes of UTF-8 sec6-scaling-cost-v1|seed|profile. Independent integer-uniform multipliers 950..1050 divided by1000 are drawn activation then service for each q.",
+    "cost_coordinates": "x=q/Q; y=(q-1)/(Q-1) for Q>1, otherwise y=0",
+    "cost_base_formulas": {
+      "balanced": {
+        "c": "3/2+3*x",
+        "s": "1/20+(7/40)*y"
+      },
+      "activation_heavy": {
+        "c": "4+8*x",
+        "s": "1/50+(1/25)*y"
+      },
+      "service_heavy": {
+        "c": "1/5+(1/2)*y",
+        "s": "1/10+(3/8)*y"
+      }
+    },
+    "cost_interpretation": "New controlled normalized-position profiles keep ranges comparable as Q varies; scenario costs, not measured expenditures or unchanged original trace formulas.",
+    "precision": "All synthetic parameters use exact rational arithmetic.",
+    "distinct_coordinates": 17,
+    "distinct_instances": 510,
+    "additional_coordinates": [
+      {
+        "Q": 256,
+        "B": 4,
+        "T": 9,
+        "axis": "Q_extended"
+      },
+      {
+        "Q": 512,
+        "B": 4,
+        "T": 9,
+        "axis": "Q_extended"
+      },
+      {
+        "Q": 64,
+        "B": 8,
+        "T": 17,
+        "axis": "joint_growth"
+      },
+      {
+        "Q": 128,
+        "B": 16,
+        "T": 33,
+        "axis": "joint_growth"
+      }
+    ]
+  },
+  "execution": {
+    "optimization_budget_seconds": 5.0,
+    "wall_budget_seconds": 10.0,
+    "memory_limit_mib": 2048,
+    "memory_enforcement": "Monitor resident memory RSS; do not set 2GiB RLIMIT_AS because numerical libraries may map larger virtual regions.",
+    "optimization_budget_semantics": "MILP model construction is included in the total 5-second optimization budget; its internal solve time limit is the remaining budget max(0,5-build_seconds). Exact and heuristic solvers use the same 5-second cooperative optimization budget. Report input parsing, model construction, optimization, final reconstruction and replay separately; completion overhead beyond the optimization budget is flagged explicitly.",
+    "hard_wall_semantics": "Main optimization budget 5 seconds and hard worker wall 10 seconds; predetermined center-budget sensitivity uses 30 seconds optimization and 45 seconds hard wall. Parsing, final recovery and replay are recorded separately. Bulk validation enforces per-job equivalent protection.",
+    "statuses": "Retain successful, timeout with/without incumbent, replay failure, memory limit and error records. Never drop a configuration because of outcome.",
+    "precision": "PHT and heuristic optimization and canonical replay use exact rational arithmetic. Retain MILP numeric objective, bound, solver status/gap, raw/restored menus and exact canonical replay separately. Every valid returned menu contributes its actual canonical-choice profit, even if the numerical assignment differs; keep mismatch flags. Numerical solver optimality alone is not an original-problem exact certificate.",
+    "method_timing": "Identical semantic timing fields; no warm-start from another method or previous instance optimum. Shared predeclared input preprocessing may be reported separately.",
+    "cpu_threads": "One computational thread per isolated job; fixed CPU per instance with repeated methods on same CPU when affinity available.",
+    "timing_comparability": "Bulk real/gamma throughput is pipeline validation only. Isolated benchmarking supplies method comparisons; never pool their wall times.",
+    "rss": "Record peak RSS per isolated worker and the scope of bulk-process peaks explicitly.",
+    "source_reproducibility": "Record source/protocol/input/solver hashes and execution environment in run manifest.",
+    "maximum_parallel_jobs": 4,
+    "method_order_seed": 20261018,
+    "method_order_namespace": "sec6-final-order-v2",
+    "method_order_rule": "Within each suite-instance-repeat block sort methods by SHA256(UTF8 namespace|seed|suite|instance_id|repeat|method), ties by method name. Freeze resulting job manifest before execution.",
+    "cpu_assignment_rule": "Use identical instance ID hash assignment for all methods, repeats and budgets; CPU set fixed in run manifest."
+  },
+  "aggregation": {
+    "real_unit": "Source meter is the cluster; nine scenario combinations are paired simulation scenarios, not nine independent observed markets.",
+    "real_profit": "Compare algorithms on identical input. For exact OPT>0 report relative profit loss (OPT-value)/OPT. For OPT=0 report the absolute difference OPT-value separately; add no epsilon or artificial denominator floor. Retain unresolved/timeouts and coverage.",
+    "real_equal_weight": "Within each association-cost stratum, summarize windows within each meter first, then weight meters equally. Report numbers of meters/windows/scenarios separately.",
+    "mapping": "Compare gamma values within the same meter-month-association-cost block; stratify cost and association.",
+    "synthetic_timing": "For each instance-method summarize three timing repetitions by median; compare ten independent input seeds per cost/configuration. Repeats are not independent input observations.",
+    "timeouts": "Report completion fractions and budget-censored times separately; do not remove failures or replace them with exact completion times.",
+    "capacity": "Report V(0)..V(6), cap needed to reach unrestricted optimum, and relative loss; no presupposed positive gap.",
+    "uncertainty": "Meter-cluster bootstrap preserving paired scenarios for trace data; independent input seed summaries for synthetic data. Timing repeats summarized within instance. All counts disclosed.",
+    "milp_coverage": "Report actual-profit coverage for every canonically replayed feasible menu, independent of numerical assignment mismatch. Report solver status, numeric bound, replay mismatch and original-problem certificate status separately.",
+    "timing_ratios": "Use paired completed instances for speed ratios; show the denominator and overall completion fractions. Report timeout and no-menu counts without treating budgets as completed runtimes."
+  },
+  "expected_counts": {
+    "jobs_by_suite": {
+      "real_full": 20232,
+      "real_comparison": 12960,
+      "real_capacity": 864,
+      "mapping_sensitivity": 1728,
+      "synthetic_scaling": 7110,
+      "budget_sensitivity": 450
+    },
+    "total_jobs": 43344,
+    "bulk_jobs": 21960,
+    "isolated_jobs": 21384,
+    "comparison_instances": 864,
+    "scaling_instances": 510,
+    "mapping_instances": 1728,
+    "cross_mapping_replays": 7776
+  },
+  "result_policy": "Retain every planned job and terminal status. Final fixed matrix is not enlarged based on favorable/unfavorable results. Only genuine implementation errors trigger documented fixes/re-execution. Protocol version/SHA and job/input hashes are frozen before execution.",
+  "interpretation": "UCI traces supply technical quality variation. Reference monetary conversion, buyer theta/count/permissions and costs remain declared scenarios; no real transaction willingness-to-pay or negotiation benefit claim.",
+  "input_registry_path": "data/final/input_registry.json",
+  "job_manifest_path": "data/final/jobs.jsonl",
+  "budget_sensitivity": {
+    "coordinate": {
+      "Q": 32,
+      "B": 4,
+      "T": 9
+    },
+    "instances": 30,
+    "methods": [
+      "joint",
+      "G0",
+      "G1",
+      "G2",
+      "MILP"
+    ],
+    "repetitions": 3,
+    "optimization_budget_seconds": 30.0,
+    "wall_budget_seconds": 45.0,
+    "memory_limit_mib": 2048,
+    "input_reuse": "The 30 center inputs are identical to the main 5-second experiment. No new input generation or selection by outcomes."
+  }
+}

@@ -1,0 +1,77 @@
+[
+  {
+    "label": "eq:s4_5",
+    "paper_equation": "9",
+    "companion_equation": "9"
+  },
+  {
+    "label": "eq:s4_6",
+    "paper_equation": "proof only",
+    "companion_equation": "S1"
+  },
+  {
+    "label": "eq:s4_10",
+    "paper_equation": "12",
+    "companion_equation": "12"
+  },
+  {
+    "label": "eq:s4_12",
+    "paper_equation": "proof only",
+    "companion_equation": "S2"
+  },
+  {
+    "label": "eq:s5_10",
+    "paper_equation": "18",
+    "companion_equation": "18"
+  },
+  {
+    "label": "eq:s5_11",
+    "paper_equation": "19",
+    "companion_equation": "19"
+  },
+  {
+    "label": "eq:s4_3",
+    "paper_equation": "7",
+    "companion_equation": "7"
+  },
+  {
+    "label": "eq:s4_4",
+    "paper_equation": "8",
+    "companion_equation": "8"
+  },
+  {
+    "label": "eq:s4_8",
+    "paper_equation": "10",
+    "companion_equation": "10"
+  },
+  {
+    "label": "eq:s4_9",
+    "paper_equation": "11",
+    "companion_equation": "11"
+  },
+  {
+    "label": "eq:s4_11",
+    "paper_equation": "13",
+    "companion_equation": "13"
+  },
+  {
+    "label": "eq:s5_3",
+    "paper_equation": "14",
+    "companion_equation": "14"
+  },
+  {
+    "label": "eq:s5_4",
+    "paper_equation": "15",
+    "companion_equation": "15"
+  },
+  {
+    "label": "eq:s5_5",
+    "paper_equation": "16",
+    "companion_equation": "16"
+  },
+  {
+    "label": "eq:s5_6",
+    "paper_equation": "17",
+    "companion_equation": "17"
+  }
+]

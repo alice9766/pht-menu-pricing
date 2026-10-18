@@ -1,0 +1,218 @@
+{
+  "protocol_id": "sec6-formal-predeclared-v1",
+  "protocol_status": "frozen_before_formal_solver_execution",
+  "protocol_date": "2026-10-18 Asia/Shanghai",
+  "schema_version": "pht-experiment-v1",
+  "base_data_protocol": "protocol/data_protocol.json",
+  "source_snapshots": [
+    {
+      "path": "protocol/data_protocol.json",
+      "sha256": "2fae45103ebcb1a7912257139c67b6283792e2b7777f18fdfa8d96bfb7d1bbb9"
+    },
+    {
+      "path": "data/all/instances.jsonl",
+      "sha256": "3a406c99080b8eed6bf45c35c51a0249888fe8f43044d5eaad2bcdfd0410863a"
+    },
+    {
+      "path": "data/all/window_eligibility.csv",
+      "sha256": "1fb550ac8c08578bf520d47f7b22e047feea61f2dd58896e94763551938f5c1d"
+    },
+    {
+      "path": "data/pilot/instances.jsonl",
+      "sha256": "5aec34e5304df933a0293ea9cbf1348ed317054913b00146523234b383b9be37"
+    },
+    {
+      "path": "data/pilot/selection_manifest.json",
+      "sha256": "016fd10114585c0f02d7fd7ad42bac6948fd7f37d6812f70adc51afe45c33217"
+    },
+    {
+      "path": "data/source/window_quality_audit.csv",
+      "sha256": "31fa7f66ce3effa1839d714ae58699043ac71d6df252b212950b9d5eaa1d884b"
+    },
+    {
+      "path": "data/source/legacy_cost_reference.json",
+      "sha256": "6035f88f4e3bf22fa1f70092a73542b6c411ea1cc379a1929507ba5bee1011a1"
+    }
+  ],
+  "purpose": "Execute the predeclared eligible trace pool and controlled scalability grid without selecting instances from solver outcomes.",
+  "real_full": {
+    "input_path": "data/all/instances.jsonl",
+    "windows": 2248,
+    "distinct_meters": 362,
+    "scenarios_per_window": 9,
+    "instances": 20232,
+    "methods": [
+      "joint"
+    ],
+    "repetitions": 1,
+    "timing_mode": "bulk_validation",
+    "base_data_protocol_unchanged": true
+  },
+  "comparison": {
+    "input_path": "data/pilot/instances.jsonl",
+    "selection_rule": "The 24 windows fixed by the original hash-ranked data protocol; no reselection after solver results.",
+    "windows": 24,
+    "distinct_meters": 24,
+    "instances": 216,
+    "methods": [
+      "joint",
+      "G0",
+      "G1",
+      "G2",
+      "MILP"
+    ],
+    "repetitions": 1,
+    "timing_mode": "isolated_benchmark",
+    "joint_run_separate_from_bulk": true,
+    "baseline_common_input": true
+  },
+  "capacity": {
+    "input_path": "data/pilot/instances.jsonl",
+    "instances": 216,
+    "maximum_capacity": 6,
+    "method": "capacity",
+    "repetitions": 1,
+    "timing_mode": "isolated_benchmark",
+    "report_all_capacity_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ]
+  },
+  "mapping_sensitivity": {
+    "windows": "same 24 frozen pilot windows",
+    "scenarios": "all nine original association-cost pairs per window",
+    "gamma_values": [
+      "0.5",
+      "1",
+      "2"
+    ],
+    "additional_gamma_values": [
+      "0.5",
+      "2"
+    ],
+    "additional_instances": 432,
+    "base_gamma_one": "Reuse original input and its exact optimum; it is not a new independent instance.",
+    "source_column": "data/source/window_quality_audit.csv::nmae_delay_d",
+    "formula": "alpha_q = (1/(1+nmae_q))**gamma",
+    "arithmetic": "Decimal precision 50; gamma=.5 via sqrt; gamma=2 via multiplication; final quantize to 10 decimal places ROUND_HALF_EVEN",
+    "gamma_one_validation": "All 144 window-product values must equal original pilot quantized values.",
+    "quality_order_check": "Check all 72 window-gamma vectors before solver execution; retain audit and stop on a failed strict order rather than silently deleting or resampling.",
+    "costs_and_buyers": "Identical to paired original base instance; no change to costs, counts, theta or permissions.",
+    "methods": [
+      "joint"
+    ],
+    "repetitions": 1,
+    "timing_mode": "bulk_validation"
+  },
+  "scaling": {
+    "base_dimensions": {
+      "Q": 32,
+      "B": 4,
+      "T": 9
+    },
+    "axis_values": {
+      "Q": [
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "B": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      "T": [
+        3,
+        5,
+        9,
+        17,
+        33
+      ]
+    },
+    "coordinate_deduplication": "The common center (32,4,9) is generated once per seed and cost profile and reused in all three axis plots.",
+    "seeds": [
+      2026101801,
+      2026101802,
+      2026101803
+    ],
+    "cost_profiles": [
+      "balanced",
+      "activation_heavy",
+      "service_heavy"
+    ],
+    "population": 512,
+    "timing_repetitions": 3,
+    "all_methods_q_max": 32,
+    "large_q_methods": [
+      "joint"
+    ],
+    "timing_mode": "isolated_benchmark",
+    "quality_generator": "Draw Q independent integer increments uniformly from 1..9 using random.Random(seed); cumulative sums divided by total; alpha_Q=1.",
+    "buyer_generator": "B permission caps ceil(j*Q/B), j=1..B; T-1 equally spaced positive theta values from 1 to 4; all B*(T-1) combinations; count=512/(B*(T-1)), required integer.",
+    "association": "independent, exact uniform permission and theta marginals",
+    "cost_rng": "Seed is big-endian integer from first eight SHA256 bytes of UTF-8 sec6-scaling-cost-v1|seed|profile. Independent integer-uniform multipliers 950..1050 divided by1000 are drawn activation then service for each q.",
+    "cost_coordinates": "x=q/Q; y=(q-1)/(Q-1) for Q>1, otherwise y=0",
+    "cost_base_formulas": {
+      "balanced": {
+        "c": "3/2+3*x",
+        "s": "1/20+(7/40)*y"
+      },
+      "activation_heavy": {
+        "c": "4+8*x",
+        "s": "1/50+(1/25)*y"
+      },
+      "service_heavy": {
+        "c": "1/5+(1/2)*y",
+        "s": "1/10+(3/8)*y"
+      }
+    },
+    "cost_interpretation": "New controlled normalized-position profiles keep ranges comparable as Q varies; scenario costs, not measured expenditures or unchanged original trace formulas.",
+    "precision": "All synthetic parameters use exact rational arithmetic.",
+    "distinct_coordinates": 13,
+    "distinct_instances": 117
+  },
+  "execution": {
+    "optimization_budget_seconds": 5.0,
+    "wall_budget_seconds": 10.0,
+    "memory_limit_mib": 2048,
+    "memory_enforcement": "Monitor resident memory RSS; do not set 2GiB RLIMIT_AS because numerical libraries may map larger virtual regions.",
+    "optimization_budget_semantics": "MILP model construction is included in the total 5-second optimization budget; its internal solve time limit is the remaining budget max(0,5-build_seconds). Exact and heuristic solvers use the same 5-second cooperative optimization budget. Report input parsing, model construction, optimization, final reconstruction and replay separately; completion overhead beyond the optimization budget is flagged explicitly.",
+    "hard_wall_semantics": "Isolated job worker has hard10s including setup/final recovery/replay; bulk worker records per-job wall and must apply equivalent termination protection.",
+    "statuses": "Retain successful, timeout with/without incumbent, replay failure, memory limit and error records. Never drop a configuration because of outcome.",
+    "precision": "PHT and heuristic pricing/replay use exact rational arithmetic. MILP uses numerical optimization followed by independent exact difference-constraint price recovery and canonical choice replay. Retain both raw and restored candidates, the numerical objective, solver status and gap, and actual replay profit. Only a successfully exact-replayed candidate may be reported as a feasible incumbent; the weak incentive-compatibility objective is never treated as actual canonical-choice profit without replay.",
+    "method_timing": "Identical semantic timing fields; no warm-start from another method or previous instance optimum. Shared predeclared input preprocessing may be reported separately.",
+    "cpu_threads": "One computational thread per isolated job; fixed CPU per instance with repeated methods on same CPU when affinity available.",
+    "timing_comparability": "Bulk real/gamma throughput is pipeline validation only. Isolated benchmarking supplies method comparisons; never pool their wall times.",
+    "rss": "Record peak RSS per isolated worker and the scope of bulk-process peaks explicitly.",
+    "source_reproducibility": "Record source/protocol/input/solver hashes and execution environment in run manifest."
+  },
+  "aggregation": {
+    "real_unit": "Source meter is the cluster; nine scenario combinations are paired simulation scenarios, not nine independent observed markets.",
+    "real_profit": "Compare algorithms on identical input. For exact OPT>0 report relative profit loss (OPT-value)/OPT. For OPT=0 report the absolute difference OPT-value separately; add no epsilon or artificial denominator floor. Retain unresolved/timeouts and coverage.",
+    "real_equal_weight": "Within each association-cost stratum, summarize windows within each meter first, then weight meters equally. Report numbers of meters/windows/scenarios separately.",
+    "mapping": "Compare gamma values within the same meter-month-association-cost block; stratify cost and association.",
+    "synthetic_timing": "For a fixed instance-method, summarize three timing repetitions by median and retain all repetitions and statuses; then compare the three seeds within each cost profile and scaling coordinate.",
+    "timeouts": "Report completion fractions and budget-censored times separately; do not remove failures or replace them with exact completion times.",
+    "capacity": "Report V(0)..V(6), cap needed to reach unrestricted optimum, and relative loss; no presupposed positive gap.",
+    "uncertainty": "If confidence intervals are drawn for real scenarios, resample source meters as clusters, retaining paired windows/scenarios. Synthetic repetitions are execution repeats, not independent generated instances."
+  },
+  "expected_counts": {
+    "real_full_jobs": 20232,
+    "real_comparison_jobs": 1080,
+    "real_capacity_jobs": 216,
+    "mapping_jobs": 432,
+    "synthetic_scaling_jobs": 1539,
+    "total_jobs": 23499
+  },
+  "result_policy": "All predeclared inputs/jobs and all execution statuses are retained. Protocol version and SHA are fixed before formal solver execution; any later protocol change uses a new version and records its rationale.",
+  "interpretation": "UCI traces supply technical quality variation. Reference monetary conversion, buyer theta/count/permissions and costs remain declared scenarios; no real transaction willingness-to-pay or negotiation benefit claim."
+}

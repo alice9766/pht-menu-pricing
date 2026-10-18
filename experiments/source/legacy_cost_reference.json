@@ -1,0 +1,62 @@
+{
+  "source_file": "ICDE_Reproducibility_20261007/trace/verify_trace.py",
+  "source_sha256": "b8d94f3761794f318533ac7e93620f35efcf7d7309a580bfb71c5a06adf6a1d0",
+  "source_function_text": "SEEDS = {\"balanced\": 2026092110, \"activation_heavy\": 2026092100,\n         \"service_heavy\": 2026092120}\n\ndef costs(profile):\n    rng = random.Random(SEEDS[profile])\n    fixed, marginal = [], []\n    for m in range(6):\n        if profile == \"balanced\":\n            h, c = 1.5 + .5 * (m + 1), .05 + .035 * m\n        elif profile == \"activation_heavy\":\n            h, c = 4.0 + 1.2 * (m + 1) ** 1.25, .02 + .008 * m\n        else:\n            h, c = .2 + .1 * m, .10 + .075 * m\n        fixed.append(F(str(round(h * rng.uniform(.95, 1.05), 9))))\n        marginal.append(F(str(round(c * rng.uniform(.95, 1.05), 9))))\n    return tuple(fixed), tuple(marginal)",
+  "extraction": "Direct AST extraction and execution of original SEEDS and costs function; no optimized solver used.",
+  "profiles": {
+    "balanced": {
+      "activation_cost_exact": [
+        "101850839/50000000",
+        "2624599059/1000000000",
+        "759478981/250000000",
+        "1779753349/500000000",
+        "1927386977/500000000",
+        "4616844457/1000000000"
+      ],
+      "unit_service_cost_exact": [
+        "163119/3125000",
+        "43362963/500000000",
+        "6031191/50000000",
+        "15515663/100000000",
+        "48320737/250000000",
+        "231766413/1000000000"
+      ]
+    },
+    "activation_heavy": {
+      "activation_cost_exact": [
+        "5226212311/1000000000",
+        "28073279/3906250",
+        "9013644073/1000000000",
+        "5327624237/500000000",
+        "542597301/40000000",
+        "8013472007/500000000"
+      ],
+      "unit_service_cost_exact": [
+        "20766517/1000000000",
+        "6756771/250000000",
+        "1110163/31250000",
+        "22845467/500000000",
+        "25953271/500000000",
+        "58262817/1000000000"
+      ]
+    },
+    "service_heavy": {
+      "activation_cost_exact": [
+        "49130531/250000000",
+        "78495829/250000000",
+        "414379237/1000000000",
+        "30322761/62500000",
+        "38867137/62500000",
+        "713179389/1000000000"
+      ],
+      "unit_service_cost_exact": [
+        "48419881/500000000",
+        "21769689/125000000",
+        "248636633/1000000000",
+        "319806239/1000000000",
+        "102268539/250000000",
+        "471445039/1000000000"
+      ]
+    }
+  }
+}
