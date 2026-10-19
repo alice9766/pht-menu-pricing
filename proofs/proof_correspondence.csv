@@ -6,5 +6,5 @@ Theorem 4.2,Finite threshold reduction,thm:finite_threshold,6,proofs/proof_bodie
 Lemma 5.1,Correctness of the subforest recurrence,lem:subforest,8,proofs/proof_bodies.tex,True,3
 Theorem 5.1,Exact joint optimization,thm:joint,8,proofs/proof_bodies.tex,True,4
 Theorem 5.2,Computational complexity,thm:complexity,8,proofs/proof_bodies.tex,True,4
-Corollary 5.1,Maximum number of offered products,cor:cardinality,9,proofs/proof_bodies.tex,True,4
+Corollary 5.1,Maximum number of offered products,cor:cardinality,8,proofs/proof_bodies.tex,True,4
 Corollary 5.2,Repricing a fixed product set,cor:fixed,9,proofs/proof_bodies.tex,True,5
