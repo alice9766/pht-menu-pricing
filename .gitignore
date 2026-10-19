@@ -1,0 +1,12 @@
+.work/
+generated/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+proofs/*.aux
+proofs/*.log
+proofs/*.out
+proofs/*.fls
+proofs/*.fdb_latexmk
